@@ -6,8 +6,6 @@ The workflow extracts spoken lines from Shakespeare XML files, identifies major 
 
 > **Note:** Each `<LINE>` element in the Shakespeare XML corpus is treated as one analysis unit. No additional sentence segmentation is performed.
 
----
-
 ## Project Workflow
 
 The project consists of two stages.

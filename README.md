@@ -1,34 +1,35 @@
-# Sentence-Level Sentiment Analysis of Shakespeare's Plays Using the ChatGPT API
+# Sentence-Level Sentiment and Emotion Analysis of Shakespeare's Plays
 
 This repository contains a sentence-level sentiment and emotion analysis project based on Shakespeare's plays.
 
-The project extracts spoken lines from Shakespeare XML files, selects major characters, applies Flair sentiment classification, and uses the OpenAI API to assign an emotion and sentiment label to each sentence. The resulting annotations are stored in JSON and Excel files and are subsequently used for statistical analysis and visualization.
+The workflow extracts spoken lines from Shakespeare XML files, selects major characters, applies Flair's pretrained sentiment classifier, and uses the OpenAI API to assign an emotion and sentiment label to each text unit. The resulting annotations are stored in JSON and Excel files and used for statistical analysis and visualization.
+
+> **Note:** In this project, each `<LINE>` element in the source XML is treated as a sentence-level analysis unit. The workflow does not perform additional linguistic sentence segmentation.
 
 ## Project Overview
 
-The analysis consists of two main stages.
+The analysis consists of two main parts.
 
 ### Part 1: Data Preparation and Flair Sentiment Analysis
 
-1. Parse a Shakespeare play from an XML file.
-2. Extract the spoken lines together with their act, scene, speaker, and sentence number.
-3. Identify speakers who:
+The Part 1 scripts:
 
-   * appear in every act of the play; and
-   * have at least 50 extracted sentences.
-4. Select two eligible speakers.
-5. Apply Flair's pretrained sentiment classifier to each selected sentence.
+1. parse a Shakespeare play from an XML file;
+2. extract spoken lines with their act, scene, speaker, identifier, and text;
+3. identify speakers who appear in every act and have at least 50 extracted lines;
+4. select two eligible speakers; and
+5. apply Flair's pretrained sentiment classifier to the selected lines.
 
-Flair assigns:
+For each line, Flair produces:
 
-* `POSITIVE` or `NEGATIVE`
-* a confidence score between 0 and 1
+* a binary sentiment label: `POSITIVE` or `NEGATIVE`;
+* a confidence score between 0 and 1.
 
 ### Part 2: GPT Emotion and Sentiment Analysis
 
-The selected sentences are sent individually to the OpenAI API.
+The selected lines are submitted individually to the OpenAI API using `gpt-4o-mini`.
 
-For each sentence, `gpt-4o-mini` predicts:
+For each line, the model predicts:
 
 * one main emotion:
 
@@ -46,18 +47,18 @@ For each sentence, `gpt-4o-mini` predicts:
   * negative
   * neutral
 
-The GPT API is configured to return a JSON object for each sentence. The current implementation uses a temperature of `0.7`.
+The API is instructed to return a valid JSON object containing the two labels. The current implementation uses a temperature of `0.7`.
 
-For the Hamlet experiment included in this repository, the analysis focuses on:
+The experiment included in this repository focuses on:
 
 * Hamlet
 * King Claudius
 
-The script also draws a random sample of 100 sentences from the combined sentences of these two characters.
+In addition to their full sets of extracted lines, the script draws a random sample of 100 lines from the combined Hamlet and King Claudius pool.
 
 ## Dataset
 
-The `dataset/` directory contains eight plays from the NLTK Shakespeare XML corpus:
+The `dataset/` directory contains eight XML plays from the NLTK Shakespeare corpus:
 
 * `a_and_c.xml` — *Antony and Cleopatra*
 * `dream.xml` — *A Midsummer Night's Dream*
@@ -67,8 +68,6 @@ The `dataset/` directory contains eight plays from the NLTK Shakespeare XML corp
 * `merchant.xml` — *The Merchant of Venice*
 * `othello.xml` — *Othello*
 * `r_and_j.xml` — *Romeo and Juliet*
-
-The extraction script treats each spoken line in the XML data as a sentence-level analysis unit.
 
 ## Repository Structure
 
@@ -113,37 +112,55 @@ The extraction script treats each spoken line in the XML data as a sentence-leve
 │   ├── sample_part1_sentence_extractor.py
 │   └── sample_part1_speaker_selector.py
 │
-└── visualizations/
-    ├── play_claudius_sentiment_development.png
-    ├── play_hamlet_sentiment_development.png
-    ├── plot_1.png
-    ├── plot_2.png
-    └── plot_3.png
+├── visualizations/
+│   ├── play_claudius_sentiment_development.png
+│   ├── play_hamlet_sentiment_development.png
+│   ├── plot_1.png
+│   ├── plot_2.png
+│   └── plot_3.png
+│
+├── README.md
+└── requirements.txt
 ```
 
-The files ending in `_skeleton.py` are incomplete exercise templates. The corresponding `sample_part1_*.py` files contain implemented examples for the first part of the workflow.
+The files ending in `_skeleton.py` are exercise templates. The corresponding `sample_part1_*.py` files contain implemented examples for Part 1.
 
-## Requirements
+## Installation
 
-The repository does not currently include a `requirements.txt` file. Based on the imports used by the scripts, the project requires:
-
-* Python 3.9 or later
-* `openai`
-* `flair`
-* `openpyxl`
-* `pandas`
-* `matplotlib`
-* `tqdm`
-
-Install the required packages with:
+Clone the repository:
 
 ```bash
-pip install openai flair openpyxl pandas matplotlib tqdm
+git clone https://github.com/barcetonio6668/sentiment_analysis_of_Shakespeare-plays_using_Chatgpt_API.git
+cd sentiment_analysis_of_Shakespeare-plays_using_Chatgpt_API
+```
+
+Creating a virtual environment is recommended:
+
+```bash
+python -m venv .venv
+```
+
+Activate it on macOS or Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Activate it on Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ## OpenAI API Configuration
 
-An OpenAI API key is required to run `part2_call_API.py`.
+An OpenAI API key is required to run `scripts/part2_call_API.py`.
 
 Set the `OPENAI_API_KEY` environment variable before running the script.
 
@@ -163,43 +180,45 @@ Do not place an API key directly in the source code or commit it to the reposito
 
 ## Usage
 
-Run the commands from the repository root unless the file paths inside a script have been adjusted.
+Run the following commands from the repository root. Some Part 1 scripts use relative paths or placeholder play names, so check their path variables before execution.
 
-### 1. Extract Sentences
-
-The implemented extraction example is:
+### 1. Extract Spoken Lines
 
 ```bash
 python scripts/sample_part1_sentence_extractor.py
 ```
 
-This script parses a Shakespeare XML file and produces a JSON file containing sentence-level records.
+The script parses one Shakespeare XML file and produces a JSON file containing the extracted lines and their metadata.
 
-Each extracted record includes information such as:
+A record follows this general structure:
 
 ```json
 {
-  "act": "ACT I",
-  "scene": "SCENE I",
+  "act": 1,
+  "scene": 1,
   "speaker": "HAMLET",
-  "sentence number": 1,
-  "text": "Example sentence"
+  "sentence_id": 1,
+  "text": "Example line"
 }
 ```
 
-Before running the script, check that the selected play and its XML path correspond to the location of the files on your system.
+In the current sample script, the play name is set directly in the source code:
+
+```python
+play_name = "dream"
+```
+
+The expected input and output locations may therefore need to be adjusted before running the script from the repository root.
 
 ### 2. Select Speakers
-
-Run:
 
 ```bash
 python scripts/sample_part1_speaker_selector.py
 ```
 
-The script calculates the number of sentences and represented acts for each speaker. It then asks the user to select two speakers who appear in every act and have at least 50 sentences.
+The script identifies eligible speakers based on their number of lines and their presence across acts. Two speakers can then be selected for further analysis.
 
-The selected sentences are saved in a file following this naming pattern:
+The selected records are saved in a file following this pattern:
 
 ```text
 selected_speakers_<play_name>.json
@@ -207,13 +226,13 @@ selected_speakers_<play_name>.json
 
 ### 3. Apply Flair Sentiment Analysis
 
-Run:
-
 ```bash
 python scripts/sample_part1_flair_sentiment.py
 ```
 
-The script applies Flair's pretrained sentiment model to every selected sentence and adds a field in the following format:
+The script applies Flair's pretrained sentiment classifier to each selected line and adds a sentiment label and confidence score.
+
+Example:
 
 ```json
 {
@@ -226,7 +245,7 @@ The script applies Flair's pretrained sentiment model to every selected sentence
 
 ### 4. Run GPT Emotion and Sentiment Analysis
 
-The API script uses command-line arguments:
+The API script accepts three command-line arguments:
 
 ```bash
 python scripts/part2_call_API.py \
@@ -244,9 +263,9 @@ python scripts/part2_call_API.py \
   50
 ```
 
-The script reads the Flair-annotated JSON data, sends each sentence to `gpt-4o-mini`, and stores the combined Flair and GPT annotations in an Excel workbook.
+The script reads the Flair-annotated JSON file, submits text units to `gpt-4o-mini`, and saves the combined annotations in an Excel workbook.
 
-The output contains the following columns:
+The workbook contains the following columns:
 
 * `act`
 * `scene`
@@ -258,35 +277,27 @@ The output contains the following columns:
 * `gpt_main_emotion`
 * `gpt_sentiment`
 
-### 5. Calculate Statistics
+> The current implementation accepts `max_sentences_per_speaker` as a command-line argument but does not apply this value when constructing the final dataset.
 
-Run:
+### 5. Calculate Statistics
 
 ```bash
 python scripts/part2_sentiment_stats.py
 ```
 
-This script reads the Excel results and calculates sentiment and emotion statistics for the analyzed characters.
+This script reads the Excel output and calculates sentiment and emotion statistics for the analyzed characters.
 
-Before running it, update the `INPUT_PATH` variable. The current script contains an absolute local file path that will not work on another computer without modification:
-
-```python
-INPUT_PATH = "path/to/sentiment_analysis_hamlet.xlsx"
-```
+Check and, where necessary, update the input path defined in the script before running it.
 
 ### 6. Generate Visualizations
-
-Run:
 
 ```bash
 python scripts/part2_plots.py
 ```
 
-The script generates visualizations comparing Flair and GPT sentiment results and examining sentiment development across the play.
+This script generates visualizations comparing Flair and GPT sentiment classifications and showing sentiment development across the play.
 
-The repository currently includes visualizations for Hamlet and King Claudius in the `visualizations/` directory.
-
-## Output
+## Results
 
 The main experiment output is:
 
@@ -296,61 +307,69 @@ results/sentiment_analysis_hamlet.xlsx
 
 It combines:
 
-* sentence metadata from the Shakespeare XML file;
-* binary sentiment predictions from Flair;
+* XML metadata;
+* Flair sentiment labels;
 * Flair confidence scores;
-* eight-category emotion predictions from GPT;
-* three-category sentiment predictions from GPT.
+* GPT emotion labels;
+* GPT sentiment labels.
 
-The `results/` directory also contains the intermediate sentence extraction files and the selected-speaker data for Hamlet.
+The repository also contains intermediate JSON data and five generated visualization files.
+
+### Example Visualizations
+
+#### Hamlet sentiment development
+
+![Hamlet sentiment development](visualizations/play_hamlet_sentiment_development.png)
+
+#### King Claudius sentiment development
+
+![King Claudius sentiment development](visualizations/play_claudius_sentiment_development.png)
 
 ## Methodological Notes
 
-The two systems do not use identical label sets:
+Flair and GPT use different label inventories:
 
-| System | Output                                   |
-| ------ | ---------------------------------------- |
-| Flair  | Positive or negative sentiment           |
-| GPT    | Positive, negative, or neutral sentiment |
-| GPT    | One of eight main emotions               |
+| System | Prediction task | Labels                         |
+| ------ | --------------- | ------------------------------ |
+| Flair  | Sentiment       | Positive or negative           |
+| GPT    | Sentiment       | Positive, negative, or neutral |
+| GPT    | Emotion         | Eight emotion categories       |
 
-Because Flair does not provide a neutral category in this workflow, direct comparisons between Flair and GPT should take this difference into account.
+Because Flair does not provide a neutral class in this workflow, its predictions are not directly equivalent to the three-class GPT sentiment predictions.
 
-The analysis is performed sentence by sentence. Consequently, predictions are based on isolated spoken lines rather than the wider dramatic context of the scene or play. This can be challenging for Shakespearean language because individual sentences may contain ambiguity, irony, figurative language, or context-dependent emotion.
+The models also analyze each extracted line independently. They therefore do not receive information from the surrounding dialogue, scene, speaker history, or broader dramatic context. This is particularly relevant for Shakespearean text, where irony, figurative language, and contextual ambiguity can affect interpretation.
 
 ## Current Limitations
 
-* The repository does not include a `requirements.txt` file.
-* Some scripts contain local or hard-coded paths that must be changed before use.
-* The Part 1 skeleton files contain unimplemented `pass` statements and are not directly runnable.
-* The GPT analysis in `part2_call_API.py` is specifically configured for Hamlet and King Claudius.
-* The `max_sentences_per_speaker` command-line argument is parsed, but the current processing function uses the complete sentence lists for Hamlet and King Claudius rather than applying that value as a limit.
-* Random sampling is not assigned a fixed random seed, so the sampled 100 sentences may differ between runs.
-* Sentence-level analysis does not include the broader context of surrounding dialogue.
-* No automated tests are currently included.
-* No license file is currently provided.
+* The XML `<LINE>` elements are treated as sentences without additional sentence segmentation.
+* Several scripts contain hard-coded or placeholder paths.
+* The Part 1 skeleton files are incomplete templates.
+* The GPT script is configured specifically for Hamlet and King Claudius.
+* The `max_sentences_per_speaker` argument is not currently applied.
+* The extra sample of 100 lines is drawn without a fixed random seed.
+* Lines in the random sample are appended to the complete character datasets and may therefore occur more than once in the Excel output.
+* No automated tests or explicit license file are currently included.
 
 ## Possible Improvements
 
 Future development could include:
 
 * replacing hard-coded paths with command-line arguments;
-* making the play and speaker names configurable;
-* applying the requested sentence limit consistently;
-* setting a random seed for reproducible sampling;
-* adding error handling and API retry logic;
-* including scene-level or dialogue-level context;
-* evaluating agreement between Flair, GPT, and manual annotations;
-* adding automated tests;
-* adding an explicit software and dataset license.
+* making play and speaker selection configurable;
+* applying the maximum-sentence argument correctly;
+* separating full-data and random-sample experiments;
+* setting a random seed for reproducibility;
+* adding API retry and validation logic;
+* incorporating scene-level or dialogue-level context;
+* comparing model outputs with manual annotations;
+* adding automated tests and a license.
 
 ## Acknowledgements
 
-The Shakespeare XML files used in this project come from the NLTK Shakespeare corpus.
+This project uses:
 
-The project uses:
-
+* XML texts from the NLTK Shakespeare corpus;
 * Flair for pretrained binary sentiment classification;
 * the OpenAI API for sentence-level emotion and sentiment analysis;
-* pandas and openpyxl for result processing;
+* openpyxl and pandas for tabular result processing;
 * matplotlib for visualization.

@@ -181,5 +181,5 @@ This project uses:
 
 ---
 
-* Maintainer: liuxduan
-Last updated: June 2026
+**Maintainer:** liuxduan  
+**Last updated:** July 2026

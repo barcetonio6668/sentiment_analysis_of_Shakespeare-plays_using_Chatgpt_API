@@ -7,8 +7,6 @@ Calling an API for Emotion Analysis
 - Using a Command Line Interface (CLI) to specify input/output files.
 - Store the final results in an Excel file.
 
-Author 1 & Matriculation Number: Liu Xiaoduan 23-749-609
-Author 2 & Matriculation Number: Qi Xinyan 23-757-511
 """
 
 import json

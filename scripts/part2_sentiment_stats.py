@@ -8,8 +8,6 @@ Based on the flair- and OpenAI annotations, compute the following statistics:
 - check the number of highly emotional sentences, that should be the total number of text lines in the json file equals to 1489+547 = 2036
 - any additional counts that support interpretation of sentiment dynamics, in this case, count average emotional intensity per character
 
-Author 1 & Matriculation Number: Liu Xiaoduan 23-749-609
-Author 2 & Matriculation Number: Qi Xinyan 23-757-511
 """
 
 import pandas as pd

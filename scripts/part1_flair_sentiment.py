@@ -8,6 +8,7 @@ Part 1a: Sentiment Analysis using Flair.
 - The sentiment field contains:
     - label (str): "POSITIVE" or "NEGATIVE"
     - score (float): confidence score between 0 and 1
+    
 """
 
 import json

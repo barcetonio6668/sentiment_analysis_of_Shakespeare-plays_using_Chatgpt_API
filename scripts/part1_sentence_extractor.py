@@ -4,6 +4,7 @@ Part 0a: Sentence Extraction from a Shakespeare XML file.
 - Parses one XML play file (from the NLTK Shakespeare XML corpus).
 - Extracts all spoken lines as "sentences".
 - Stores them in all_sentences.json.
+
 """
 
 import json

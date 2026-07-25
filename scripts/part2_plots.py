@@ -11,8 +11,6 @@ as you see fit to achieve the desired plots.
 You can even use the same extraction to create multiple plots,
 if the analysis requires the same data but the visualization and following interpretation differ to a reasonable extent.
 
-Author 1 & Matriculation Number: Liu Xiaoduan 23-749-609
-Author 2 & Matriculation Number: Qi Xinyan 23-757-511
 """
 
 import pandas as pd

@@ -50,8 +50,6 @@ For each line, GPT predicts:
 
 The annotated results are exported to Excel for statistical analysis and visualization.
 
----
-
 ## Dataset
 
 The repository contains eight Shakespeare plays from the NLTK Shakespeare XML corpus:
@@ -66,8 +64,6 @@ The repository contains eight Shakespeare plays from the NLTK Shakespeare XML co
 * Romeo and Juliet
 
 The current experiment focuses on **Hamlet** and **King Claudius**.
-
----
 
 ## Repository Structure
 
@@ -84,8 +80,6 @@ The current experiment focuses on **Hamlet** and **King Claudius**.
 ```
 
 The `scripts/` directory contains the complete workflow, including sentence extraction, speaker selection, Flair sentiment analysis, GPT annotation, statistical analysis, and visualization.
-
----
 
 ## Installation
 
@@ -108,8 +102,6 @@ Before running the GPT annotation script, configure your OpenAI API key:
 export OPENAI_API_KEY="your-api-key"
 ```
 
----
-
 ## Usage
 
 Run the scripts in the following order:
@@ -122,8 +114,6 @@ python scripts/part2_call_API.py
 python scripts/part2_sentiment_stats.py
 python scripts/part2_plots.py
 ```
-
----
 
 ## Output
 
@@ -143,8 +133,6 @@ The main output file is:
 results/sentiment_analysis_hamlet.xlsx
 ```
 
----
-
 ## Current Limitations
 
 * Each XML `<LINE>` element is treated as one analysis unit.
@@ -152,8 +140,6 @@ results/sentiment_analysis_hamlet.xlsx
 * Some scripts still contain hard-coded paths that should be generalized.
 * The skeleton scripts are intended as exercise templates and are not complete implementations.
 * No automated tests are currently included.
-
----
 
 ## Future Work
 
@@ -166,8 +152,6 @@ Possible future improvements include:
 * comparison with manually annotated data;
 * incorporation of dialogue or scene-level context.
 
----
-
 ## Acknowledgements
 
 This project uses:
@@ -176,8 +160,6 @@ This project uses:
 * Flair for pretrained sentiment classification;
 * the OpenAI API for emotion and sentiment prediction;
 * pandas, openpyxl, and matplotlib for data processing and visualization.
-
----
 
 **Maintainer:** liuxduan  
 **Last updated:** July 2026

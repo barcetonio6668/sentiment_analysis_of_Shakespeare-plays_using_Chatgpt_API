@@ -9,7 +9,7 @@
 
 2.1.2 Manual Evaluation
 
-#Agreement and disagreement scores for both sentiment and emotion labels
+# Agreement and disagreement scores for both sentiment and emotion labels
 
 	Agreement score for emotion and sentiment labels: 39/100=0.39
 
@@ -21,13 +21,13 @@
 
 2.1.3 Numerical Evaluation of Automatic Sentiment/Emotion Results
 
-#The number of positive, negative, and neutral sentences per character：
+# The number of positive, negative, and neutral sentences per character：
 
  	KING CLAUDIUS: {'positive': 92, 'negative': 151, 'neutral': 150}
 
  	HAMLET: {'positive': 212, 'negative': 485, 'neutral': 355}
 
-#Sentiment distribution across acts
+# Sentiment distribution across acts
 
  	ACT I: {'positive': 64, 'negative': 99, 'neutral': 92}
 
@@ -39,7 +39,7 @@
 
  	ACT V: {'positive': 47, 'negative': 113, 'neutral': 105}
 
-#sentiment distribution across scenes
+# Sentiment distribution across scenes
 
  	SCENE II. A room of state in the castle.: {'positive': 32, 'negative': 57, 'neutral': 45}
 
@@ -69,7 +69,7 @@
 
  	SCENE IV. A plain in Denmark.: {'positive': 5, 'negative': 16, 'neutral': 14}
 
-#The number of highly emotional sentences (flair confidence ≥ 0.90)
+# The number of highly emotional sentences (flair confidence ≥ 0.90)
 
  	Original jason file’s result from Part1: 1489+547 = 2036
 
@@ -79,7 +79,7 @@
 
 	The reduction is theoretically unreasonable because they should remain the same. However, the 1445 is consistent with the Excel file output, which may indicate that computational loss exists after GPT analysis.
 
-#Any additional counts that support your interpretation of sentiment dynamics
+# Any additional counts that support your interpretation of sentiment dynamics
 
  	Average Emotional Intensity per Character
 
@@ -88,7 +88,7 @@
 
 2.2 Reporting
 
-#The criteria used to evaluate sentiment accuracy
+# The criteria used to evaluate sentiment accuracy
 
  	Criteria 1 Polarity agreement: A sentiment label (positive/negative/neutral) is considered correct only if it exactly matches the human annotation.
 
@@ -98,7 +98,7 @@
 
  	Criteria 4 Handling of ambiguity: For ambiguous sentences, a system label is acceptable if it aligns with the most plausible dominant interpretation selected by the human annotator.
 
-#Challenges encountered during manual annotation and comparison to system outputs
+# Challenges encountered during manual annotation and comparison to system outputs
 
  	In the experiment, the function has\_enough\_sentences we wrote originally only counted the number of sentences for HAMLET and KING CLAUDIUS and printed them out without actually determining whether the data was sufficient, which revealed a limitation in how “high-confidence sentences” were operationalized in code. Although a threshold of 0.9 was later introduced to filter Flair predictions, this definition remains debatable, as the model's “confidence” score reflects model certainty rather than linguistic clarity, meaning that we only accept sentences that the model is highly certain about, avoiding noise. During manual annotation, decisions made at the single-sentence level were often subjective, which can be contradicted between people and difficult to verify without broader context, especially in Shakespearean dialogue. While Flair outputs only binary labels, “Negative” and “Positive,” with confidence scores, and GPT provides more interpretive flexibility, both systems showed inconsistencies when handling irony and implicit emotions, highlighting the tension between automated efficiency and human interpretive judgment. Nevertheless, manual annotation has the advantage of allowing qualitative descriptions of why a sentence is labeled as “POSITIVE,” “NEGATIVE,” or “NEUTRAL.”
 
@@ -106,7 +106,7 @@
 
  	The manual annotation process was highly time-consuming, requiring approximately one full day to complete; however, it ensured a relatively high level of annotation quality. A major challenge in annotating dramatic texts lies in the necessity of tracing each line back to its original context, as emotional meaning in plays is often implied through dialogue progression, speaker intention, and situational dynamics rather than being explicitly stated in isolated sentences. While a faster alternative would be to assign emotion labels based on surface-level interpretation or intuition—an approach sometimes adopted given the inherently subjective nature of emotion annotation—such simplification risks overlooking contextual nuance. Furthermore, the use of a fixed set of eight basic emotions inevitably constrains the expressive range of complex literary texts such as Hamlet, where emotional states are frequently ambiguous, layered, or transitional. These limitations highlight the trade-off between annotation efficiency and interpretative fidelity in emotion analysis.
 
-#Examples of sentences with clear sentiment annotation (where the manual annotation matched the system output)
+# Examples of sentences with clear sentiment annotation (where the manual annotation matched the system output)
 
 	a. Clear sentiment annotation of anger | negative
 
@@ -116,7 +116,7 @@
 
 	“between earth and heaven? We are arrant knaves” (ACT III Scene I. A room in the castle.)
 
-        c. Clear sentiment annotation of sad | negative
+    c. Clear sentiment annotation of sad | negative
 
 	“That, lapsed in time and passion, lets go by” (Scene IV. The Queen's closet.)
 
@@ -128,7 +128,7 @@
 
 	“it is not so:--it begins with Pyrrhus:--” (Scene II. A room in the castle.)
 
-#Examples where sentiment detection was ambiguous or incorrect (compared to your manual annotation)**
+# Examples where sentiment detection was ambiguous or incorrect (compared to your manual annotation)**
 
 	a. Incorrect detection of neutral emotion as anticipation and positive
 
@@ -155,7 +155,7 @@
 	#King Claudius is expressing his trust in Cornelius and saying farewell to him. No negative emotion is shown here.
 
 
-#Interpretation of the created plots
+# Interpretation of the created plots
 
 	Plot 1: This bar chart compares the sentiment distributions of each act analyzed by Flair and GPT. Both models identify ACT III as containing the most emotional sentences, with negative sentences reaching around the number of 215 in both models. However, distinct contrasts also exist between the results generated by Flair and GPT. The binary classification of the Flair model leads to a stronger polarity. Besides, in this model, both  ACT I and ACT II have more positives (140;124)than negatives(105;108), which may be explained  that the lack of neutral category leads the model to treat neutral emotions or some factual statements as positive. While with the inclusion of the neutral label, GPT shows fewer positives, many neutrals, and stronger dominance of negative sentiment. In addition, there are more negatives than positives in each ACT but relatively more balanced compared to the results shown in Flair.
 
@@ -167,12 +167,12 @@
 
 	Play_hamlet_sentiment_development: This plot demonstrates the sentiment development of Hamlet’s speech across the whole play. Hamlet’s plot shows a rather dense clustering of negative sentiment and continual dramatic shifts between positive and negative values  across the whole play, which reveals that, compared to King Claudius, Hamlet may experience more internal emotional struggle, strong anger, and desperation.
 
-#Suggestions on how to improve automatic sentiment analysis for Shakespearean texts, based on system or data preprocessing weaknesses.
+# Suggestions on how to improve automatic sentiment analysis for Shakespearean texts, based on system or data preprocessing weaknesses.
 
 	Based on both the coding process and evaluation results, improvements can be made at the level of threshold design and data interpretation. Although using a high-confidence threshold (e.g. ≥ 0.9) helps prevent low-confidence predictions from interfering with statistical patterns and improves the reliability of subsequent analyses, fixed thresholds may oversimplify emotionally ambiguous sentences. Flair does not define the "Neutral" or "high-confidence sentences ≥ 0.9" rules. Introducing rule-based logic (such as mapping low-confidence scores to Neutral) can provide a more flexible classification scheme while remaining computationally efficient. For example, if we want three categories (Positive / Negative / Neutral), we can write in our own logic, for example: score < 0.6 → Neutral; score ≥ 0.6 → Use the model’s predicted label (POSITIVE or NEGATIVE). Additionally, adapting sentiment analysis methods to account for Shakespearean language and incorporating broader context beyond single sentences could reduce misclassification. A hybrid approach that combines automatic predictions with selective manual annotation may therefore offer a more balanced and interpretable framework.
 
 
-#Feedback and Evaluation
+# Feedback and Evaluation
 
 Did ChatGPT perform as expected? Summarize your experience.
 
@@ -197,5 +197,6 @@ How long did you work on the project?
 
 
 Feel free to share any feedback regarding the project.
-Nothing else to add on.
+    
+	Nothing else to add on.
 

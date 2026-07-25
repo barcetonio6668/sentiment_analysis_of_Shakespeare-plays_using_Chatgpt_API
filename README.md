@@ -334,7 +334,6 @@ The analysis is performed sentence by sentence. Consequently, predictions are ba
 
 Future development could include:
 
-* adding a `requirements.txt` file;
 * replacing hard-coded paths with command-line arguments;
 * making the play and speaker names configurable;
 * applying the requested sentence limit consistently;

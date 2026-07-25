@@ -178,3 +178,8 @@ This project uses:
 * Flair for pretrained sentiment classification;
 * the OpenAI API for emotion and sentiment prediction;
 * pandas, openpyxl, and matplotlib for data processing and visualization.
+
+---
+
+* Maintainer: liuxduan
+Last updated: June 2026

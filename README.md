@@ -161,5 +161,7 @@ This project uses:
 * the OpenAI API for emotion and sentiment prediction;
 * pandas, openpyxl, and matplotlib for data processing and visualization.
 
+---
+
 **Maintainer:** liuxduan  
 **Last updated:** July 2026
